@@ -1,6 +1,7 @@
 import 'package:flutter/widgets.dart';
 import 'package:netflix/core/constants.dart';
 import 'package:netflix/presentation/search/widgets/title.dart';
+import 'package:netflix/presentation/widgets/main_card.dart';
 
 const imageUrl =
     'https://www.themoviedb.org/t/p/w600_and_h900_bestv2/vNVFt6dtcqnI7hqa6LFBUibuFiw.jpg';
@@ -26,21 +27,6 @@ class SearchresultWidget extends StatelessWidget {
               })),
         )
       ],
-    );
-  }
-}
-
-class MainCard extends StatelessWidget {
-  const MainCard({Key? key}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(10),
-        image: const DecorationImage(
-            fit: BoxFit.cover, image: NetworkImage(imageUrl)),
-      ),
     );
   }
 }

@@ -36,6 +36,7 @@ dependencies:
   cupertino_icons: ^1.0.2
   google_fonts: 
   video_player: ^2.4.5
+  bordered_text: ^2.0.0
 
 dev_dependencies:
   flutter_test:
