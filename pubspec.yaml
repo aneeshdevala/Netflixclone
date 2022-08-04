@@ -37,7 +37,14 @@ dependencies:
   google_fonts: 
   video_player: ^2.4.5
   bordered_text: ^2.0.0
-
+  json_serializable: ^6.3.1
+  json_annotation: ^4.6.0
+  flutter_bloc: ^8.0.1
+  dartz: ^0.10.1
+  dio: ^4.0.6
+  get_it: ^7.2.0
+  injectable: ^1.5.3
+ 
 dev_dependencies:
   flutter_test:
     sdk: flutter
@@ -48,6 +55,9 @@ dev_dependencies:
   # package. See that file for information about deactivating specific lint
   # rules and activating additional ones.
   flutter_lints: ^2.0.0
+  build_runner: ^2.2.0
+  freezed: ^2.1.0+1
+  injectable_generator: ^1.5.4
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
