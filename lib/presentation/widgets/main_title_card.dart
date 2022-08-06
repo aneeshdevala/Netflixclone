@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:netflix/core/constants.dart';
 import 'package:netflix/presentation/widgets/main_card.dart';
 import 'package:netflix/presentation/widgets/main_title.dart';
 
@@ -21,9 +22,11 @@ class MainTitleCard extends StatelessWidget {
               scrollDirection: Axis.horizontal,
               children: List.generate(
                 10,
-                (index) => Padding(
-                  padding: const EdgeInsets.all(0.0),
-                  child: const MainCard(),
+                (index) => const Padding(
+                  padding: EdgeInsets.all(0.0),
+                  child: MainCard(
+                    imageUrl: tempImage,
+                  ),
                 ),
               ),
             ))

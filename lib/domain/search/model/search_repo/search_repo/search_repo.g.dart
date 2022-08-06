@@ -7,18 +7,26 @@ part of 'search_repo.dart';
 // **************************************************************************
 
 SearchRepo _$SearchRepoFromJson(Map<String, dynamic> json) => SearchRepo(
-      page: json['page'] as int?,
       results: (json['results'] as List<dynamic>?)
-          ?.map((e) => Result.fromJson(e as Map<String, dynamic>))
-          .toList(),
-      totalPages: json['total_pages'] as int?,
-      totalResults: json['total_results'] as int?,
+              ?.map((e) => SearchResult.fromJson(e as Map<String, dynamic>))
+              .toList() ??
+          const [],
     );
 
 Map<String, dynamic> _$SearchRepoToJson(SearchRepo instance) =>
     <String, dynamic>{
-      'page': instance.page,
       'results': instance.results,
-      'total_pages': instance.totalPages,
-      'total_results': instance.totalResults,
+    };
+
+SearchResult _$SearchResultFromJson(Map<String, dynamic> json) => SearchResult(
+      id: json['id'] as int?,
+      originalTitle: json['original_title'] as String?,
+      posterPath: json['poster_path'] as String?,
+    );
+
+Map<String, dynamic> _$SearchResultToJson(SearchResult instance) =>
+    <String, dynamic>{
+      'id': instance.id,
+      'original_title': instance.originalTitle,
+      'poster_path': instance.posterPath,
     };
