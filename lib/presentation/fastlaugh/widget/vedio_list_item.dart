@@ -1,5 +1,31 @@
+import 'dart:html';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:netflix/application/fast_laugh/fast_laugh_bloc.dart';
+import 'package:netflix/core/constants.dart';
+import 'package:netflix/domain/downlods/models/downloads.dart';
+import 'package:share_plus/share_plus.dart';
+import 'package:video_player/video_player.dart';
+
+class VedioListItemInherited extends InheritedWidget {
+  final Widget widget;
+  final Downloads movieData;
+
+  const VedioListItemInherited(
+      {Key? key, required this.widget, required this.movieData})
+      : super(key: key, child: widget);
+
+  @override
+  bool updateShouldNotify(covariant VedioListItemInherited oldWidget) {
+    return oldWidget.movieData != movieData;
+  }
+
+  static VedioListItemInherited? of(BuildContext context) {
+    return context.dependOnInheritedWidgetOfExactType<VedioListItemInherited>();
+  }
+}
 
 class VedioList extends StatelessWidget {
   final int index;
@@ -7,10 +33,10 @@ class VedioList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final posterPath = VedioListItemInherited.of(context)?.movieData.posterPath;
+    final videoUrl = dummyVideosUrl[index % dummyVideosUrl.length];
     return Stack(children: [
-      Container(
-        color: Colors.accents[index % Colors.accents.length],
-      ),
+      FastLaughVedioPlayer(videoUrl: videoUrl, onStateChanged: (bool) {}),
       Align(
         alignment: Alignment.bottomCenter,
         child: Padding(
@@ -34,21 +60,56 @@ class VedioList extends StatelessWidget {
                 padding: const EdgeInsets.symmetric(vertical: 10),
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.end,
-                  children: const [
+                  children: [
                     Padding(
-                      padding: EdgeInsets.all(10),
+                      padding: const EdgeInsets.all(10),
                       child: CircleAvatar(
                         radius: 30,
-                        backgroundImage: NetworkImage(
-                          "https://www.themoviedb.org/t/p/w600_and_h900_bestv2/vNVFt6dtcqnI7hqa6LFBUibuFiw.jpg",
-                        ),
+                        backgroundImage: posterPath == null
+                            ? null
+                            : NetworkImage("$imageAppendUrl$posterPath"),
                       ),
                     ),
-                    VedioActionWidgets(
-                        icon: Icons.emoji_emotions, title: 'LOL'),
-                    VedioActionWidgets(icon: Icons.add, title: 'My List'),
-                    VedioActionWidgets(icon: Icons.share, title: 'Share'),
-                    VedioActionWidgets(icon: Icons.play_arrow, title: 'Play'),
+                    ValueListenableBuilder(
+                      valueListenable: likedVideosNotifier,
+                      builder: (BuildContext c, Set<int> newLikedlistIds,
+                          Widget? _) {
+                        final _index = index;
+                        if (newLikedlistIds.contains(_index)) {
+                          return GestureDetector(
+                            onTap: () {
+                              likedVideosNotifier.value.remove(_index);
+                              likedVideosNotifier.notifyListeners();
+                            },
+                            child: const VedioActionWidgets(
+                                icon: Icons.favorite_outline, title: 'Liked'),
+                          );
+                        }
+
+                        return GestureDetector(
+                          onTap: () {
+                            likedVideosNotifier.value.add(_index);
+                            likedVideosNotifier.notifyListeners();
+                          },
+                          child: const VedioActionWidgets(
+                              icon: Icons.emoji_emotions, title: 'LOL'),
+                        );
+                      },
+                    ),
+                    const VedioActionWidgets(icon: Icons.add, title: 'My List'),
+                    GestureDetector(
+                        onTap: (() {
+                          final movieName = VedioListItemInherited.of(context)
+                              ?.movieData
+                              .posterPath;
+                          if (movieName != null) {
+                            Share.share(movieName);
+                          }
+                        }),
+                        child: const VedioActionWidgets(
+                            icon: Icons.share, title: 'Share')),
+                    const VedioActionWidgets(
+                        icon: Icons.play_arrow, title: 'Play'),
                   ],
                 ),
               )
@@ -87,5 +148,54 @@ class VedioActionWidgets extends StatelessWidget {
         ],
       ),
     );
+  }
+}
+
+class FastLaughVedioPlayer extends StatefulWidget {
+  final String videoUrl;
+  final void Function(bool isPlaying) onStateChanged;
+  const FastLaughVedioPlayer(
+      {Key? key, required this.videoUrl, required this.onStateChanged})
+      : super(key: key);
+
+  @override
+  State<FastLaughVedioPlayer> createState() => _FastLaughVedioPlayerState();
+}
+
+class _FastLaughVedioPlayerState extends State<FastLaughVedioPlayer> {
+  late VideoPlayerController _videoPlayerController;
+
+  @override
+  void initState() {
+    _videoPlayerController = VideoPlayerController.network(widget.videoUrl);
+    _videoPlayerController.initialize().then((_) {
+      setState(() {
+        _videoPlayerController.play();
+      });
+    });
+    super.initState();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return SizedBox(
+      width: double.infinity,
+      height: double.infinity,
+      child: _videoPlayerController.value.isInitialized
+          ? AspectRatio(
+              aspectRatio: _videoPlayerController.value.aspectRatio,
+              child: VideoPlayer(_videoPlayerController),
+            )
+          : const Center(
+              child: CircularProgressIndicator(
+              strokeWidth: 2,
+            )),
+    );
+  }
+
+  @override
+  void dispose() {
+    _videoPlayerController.dispose();
+    super.dispose();
   }
 }
