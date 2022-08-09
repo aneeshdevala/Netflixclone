@@ -3,10 +3,16 @@ import 'package:netflix/core/constants.dart';
 import 'package:netflix/presentation/home/widget/icon_button.dart';
 import 'package:netflix/presentation/new_and_hot/widgets.dart/vedio_widget.dart';
 
-class EveryOne_watchingWidget extends StatelessWidget {
-  const EveryOne_watchingWidget({
-    Key? key,
-  }) : super(key: key);
+class EveryOneWatchingWidget extends StatelessWidget {
+  final String posterPath;
+  final String originaltitle;
+  final String description;
+
+  const EveryOneWatchingWidget(
+      {super.key,
+      required this.posterPath,
+      required this.originaltitle,
+      required this.description});
 
   @override
   Widget build(BuildContext context) {
@@ -14,18 +20,23 @@ class EveryOne_watchingWidget extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         khight,
-        const Text(
-          'Friends',
+        Text(
+          originaltitle,
           style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
         ),
         khight,
-        Text(
-            'This hit sitcom follows the lives of six friends living in Manhattan something as they navigates the pitfalls of work life and love in 1990s New York.',
-            style: TextStyle(color: Colors.grey[300], fontSize: 14)),
+        Text(description,
+            maxLines: 4,
+            style: TextStyle(
+                color: Colors.grey[300],
+                fontSize: 14,
+                overflow: TextOverflow.ellipsis)),
         const SizedBox(
           height: 50,
         ),
-        const VedioWidget(),
+        VedioWidget(
+          url: posterPath,
+        ),
         khight,
         Row(
           mainAxisAlignment: MainAxisAlignment.end,

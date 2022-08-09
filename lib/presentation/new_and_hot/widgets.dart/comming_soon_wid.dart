@@ -4,11 +4,23 @@ import 'package:netflix/core/constants.dart';
 import 'package:netflix/presentation/home/widget/icon_button.dart';
 import 'package:netflix/presentation/new_and_hot/widgets.dart/vedio_widget.dart';
 
-class comingsoonwidget extends StatelessWidget {
-  const comingsoonwidget({
-    Key? key,
-  }) : super(key: key);
+class Comingsoonwidget extends StatelessWidget {
+  final String id;
+  final String month;
+  final String day;
+  final String posterPath;
+  final String movieName;
+  final String description;
 
+  const Comingsoonwidget({
+    Key? key,
+    required this.id,
+    required this.month,
+    required this.day,
+    required this.posterPath,
+    required this.movieName,
+    required this.description,
+  }) : super(key: key);
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
@@ -22,12 +34,12 @@ class comingsoonwidget extends StatelessWidget {
             mainAxisSize: MainAxisSize.min,
             children: [
               Text(
-                'FEB',
+                month,
                 style: TextStyle(fontSize: 16, color: Colors.grey[300]),
               ),
               Text(
-                "11",
-                style: TextStyle(
+                day,
+                style: const TextStyle(
                     fontSize: 30,
                     fontWeight: FontWeight.bold,
                     letterSpacing: 5),
@@ -41,48 +53,52 @@ class comingsoonwidget extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              VedioWidget(),
+              VedioWidget(
+                url: posterPath,
+              ),
               Row(
                 children: [
-                  const Text(
-                    'TALL GIRL 2',
-                    style: TextStyle(
-                      fontSize: 35,
-                      letterSpacing: -5,
-                      fontWeight: FontWeight.bold,
+                  Expanded(
+                    child: Text(
+                      movieName,
+                      maxLines: 1,
+                      style: const TextStyle(
+                        overflow: TextOverflow.ellipsis,
+                        fontSize: 35,
+                        //letterSpacing: -5,
+                        fontWeight: FontWeight.bold,
+                      ),
                     ),
                   ),
-                  const Spacer(),
-                  Row(
-                    children: const [
-                      CustomButtonWidget(
-                        icon: Icons.add_alert,
-                        title: 'Remind me',
-                        iconSize: 20,
-                        textSize: 14,
-                      ),
-                      kwidth20,
-                      CustomButtonWidget(
-                        icon: Icons.info,
-                        title: 'info',
-                        iconSize: 20,
-                        textSize: 14,
-                      ),
-                      kwidth
-                    ],
+                  const CustomButtonWidget(
+                    icon: Icons.add_alert,
+                    title: 'Remind me',
+                    iconSize: 20,
+                    textSize: 14,
                   ),
+                  kwidth20,
+                  const CustomButtonWidget(
+                    icon: Icons.info,
+                    title: 'info',
+                    iconSize: 20,
+                    textSize: 14,
+                  ),
+                  kwidth
                 ],
               ),
               khight,
-              const Text('Coming On Friday'),
-              khight,
-              const Text(
-                'Tall Girl 2',
-                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-              ),
+              Text('Coming On $day, $month'),
               khight,
               Text(
-                  'Landing the lead in the school musical is a dream come tru for jodi,until the pressure sends her confidence - and reletionship - into a tailspain',
+                movieName,
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+                style:
+                    const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+              ),
+              khight,
+              Text(description,
+                  maxLines: 4,
                   style: TextStyle(color: Colors.grey[300], fontSize: 14)),
             ],
           ),

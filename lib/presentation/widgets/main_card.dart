@@ -3,6 +3,7 @@ import 'package:netflix/core/constants.dart';
 
 class MainCard extends StatelessWidget {
   final String imageUrl;
+
   const MainCard({
     Key? key,
     required this.imageUrl,
